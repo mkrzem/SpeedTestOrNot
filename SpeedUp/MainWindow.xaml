@@ -5,8 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpeedUp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="SpeedUp!" Height="350" Width="525"
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+
+    <Window.Resources>
+        <LinearGradientBrush x:Key="backgroundBrush">
+            <GradientStop Offset="0" Color="Black"/>
+            <GradientStop Offset="0.75" Color="Red"/>
+            <GradientStop Offset="1" Color="OrangeRed"/>
+        </LinearGradientBrush>
+    </Window.Resources>
     <Grid>
-        
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Top" Background="{StaticResource backgroundBrush}">
+                <Button Background="{StaticResource backgroundBrush}" Foreground="OrangeRed" FontWeight="Bold">Read</Button>
+            </StackPanel>
+            <StackPanel></StackPanel>
+        </DockPanel>
     </Grid>
 </Window>
