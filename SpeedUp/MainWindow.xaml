@@ -14,13 +14,27 @@
             <GradientStop Offset="0.75" Color="Red"/>
             <GradientStop Offset="1" Color="OrangeRed"/>
         </LinearGradientBrush>
+        <Style x:Key="buttons" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource backgroundBrush}"/>
+            <Setter Property="Foreground" Value="Salmon"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="0,0,5,0"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="BorderBrush" Value="Black"/>            
+        </Style>
     </Window.Resources>
     <Grid>
         <DockPanel>
-            <StackPanel DockPanel.Dock="Top" Background="{StaticResource backgroundBrush}">
-                <Button Background="{StaticResource backgroundBrush}" Foreground="OrangeRed" FontWeight="Bold">Read</Button>
+            <StackPanel DockPanel.Dock="Top" Background="{StaticResource backgroundBrush}" Orientation="Horizontal">
+                <TextBox Text="{Binding CarCount}" Width="50" Margin="0,0,5,0"/>
+                <Button Style="{StaticResource buttons}" Command="{Binding Save}">Save</Button>
+                <Button Style="{StaticResource buttons}" Command="{Binding Read}">Read</Button>
+                <Button Style="{StaticResource buttons}" Command="{Binding ClearDatabase}">Clear Database</Button>
             </StackPanel>
-            <StackPanel></StackPanel>
+            <StackPanel>
+                <ListBox ItemsSource="{Binding Cars}"/>
+            </StackPanel>
         </DockPanel>
     </Grid>
 </Window>

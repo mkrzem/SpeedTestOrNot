@@ -1,4 +1,4 @@
-﻿namespace SpeedUp.Domain
+﻿namespace SpeedUP.DAL.Domain
 {
     public class Car
     {

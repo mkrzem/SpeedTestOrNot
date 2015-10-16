@@ -1,5 +1,7 @@
 using GalaSoft.MvvmLight;
 using SpeedUP.DAL;
+using SpeedUP.DAL.Domain;
+using System.Collections.ObjectModel;
 
 namespace SpeedUp.ViewModel
 {
@@ -17,17 +19,23 @@ namespace SpeedUp.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
+        public ObservableCollection<Car> Cars { get; set; }
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         public MainViewModel()
         {
+            Cars = new ObservableCollection<Car>();
             if (IsInDesignMode)
             {
             }
             else
             {
                 DataAccessManager.GetDataService("");
+                foreach (Car car in DataAccessManager.ReadCars())
+                {
+                    Cars.Add(car);
+                }
             }
             ////if (IsInDesignMode)
             ////{
@@ -37,6 +45,7 @@ namespace SpeedUp.ViewModel
             ////{
             ////    // Code runs "for real"
             ////}
+
         }
     }
 }

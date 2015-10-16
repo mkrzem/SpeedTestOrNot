@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
-                   assembly="SpeedUp"
-                   namespace="SpeedUp.Domain">
-  <class name="Car">
+                   assembly="SpeedUP.DAL"
+                   namespace="SpeedUP.DAL.Domain">
+  <class name="Car" table="CAR" lazy="false">
     <id name="Id">
-      <generator class="int"/>
+      <generator class="increment"/>
     </id>
     <property name="Make"/>
     <property name="Model"/>
