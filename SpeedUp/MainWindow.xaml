@@ -27,13 +27,20 @@
     <Grid>
         <DockPanel>
             <StackPanel DockPanel.Dock="Top" Background="{StaticResource backgroundBrush}" Orientation="Horizontal">
-                <TextBox Text="{Binding CarCount}" Width="50" Margin="0,0,5,0"/>
+                <TextBox Text="{Binding CarCount, Mode=TwoWay}" Width="50" Margin="0,0,5,0"/>
                 <Button Style="{StaticResource buttons}" Command="{Binding Save}">Save</Button>
                 <Button Style="{StaticResource buttons}" Command="{Binding Read}">Read</Button>
                 <Button Style="{StaticResource buttons}" Command="{Binding ClearDatabase}">Clear Database</Button>
             </StackPanel>
             <StackPanel>
-                <ListBox ItemsSource="{Binding Cars}"/>
+                <TextBlock>
+                    <Run Text="{Binding Cars.Count, Mode=OneWay}"/>
+                    <Run Text="Cars in database"/>
+                </TextBlock>
+                <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="20" Padding="20">
+                    <Run Text="Time elapsed: "/>
+                    <Run Text="{Binding TimeElapsed}"/>
+                </TextBlock>                    
             </StackPanel>
         </DockPanel>
     </Grid>

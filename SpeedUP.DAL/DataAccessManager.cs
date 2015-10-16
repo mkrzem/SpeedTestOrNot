@@ -4,13 +4,14 @@ using NHibernate.Tool.hbm2ddl;
 using NHibernate;
 using System.Collections.Generic;
 using SpeedUP.DAL.Domain;
+using System.Threading.Tasks;
 
 namespace SpeedUP.DAL
 {
     public static class DataAccessManager
     {
         private static ISession session;
-        public static void GetDataService(string serviceType)
+        public static void InitDataService(string serviceType)
         {
             var configuration = new Configuration();
             configuration.Configure();
@@ -32,16 +33,61 @@ namespace SpeedUP.DAL
             //session.Flush();
         }
 
-        public static IList<Car> ReadCars()
+        public static async Task<IList<Car>> ReadCarsAsync()
         {
             IList<Car> result = new List<Car>();
             if (session?.IsConnected == true && session?.IsOpen == true)
             {
-                IQueryOver<Car> query = session.QueryOver<Car>();
-                result = query.List<Car>();
+                await Task.Run(() =>
+                {
+                    IQueryOver<Car> query = session.QueryOver<Car>();
+                    result = query.List<Car>();
+                });
             }
 
             return result;
+        }
+
+        public static async Task SaveCarsAsync(int carCount)
+        {
+            await Task.Run(() =>
+            {
+                for (int i = 0; i < carCount; i++)
+                {
+                    var carEntity = new Car()
+                    {
+                        Make = "StillVolkswagen",
+                        Model = "AlwaysBora",
+                        Year = i / 1000
+                    };
+                    session.Save(carEntity);
+                }
+                session.Flush();
+            });
+        }
+
+        public static void SaveCars(int carCount)
+        {
+            for (int i = 0; i < carCount; i++)
+            {
+                var carEntity = new Car()
+                {
+                    Make = "StillVolkswagen",
+                    Model = "AlwaysBora",
+                    Year = i / 1000
+                };
+                session.Save(carEntity);
+            }
+            session.Flush();
+        }
+
+        public static void ClearCars()
+        {
+            if (session?.IsConnected == true && session?.IsOpen == true)
+            {
+                session.Delete("from Car");
+                session.Flush();
+            }
         }
     }
 }
