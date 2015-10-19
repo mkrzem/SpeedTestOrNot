@@ -38,9 +38,31 @@
                     <Run Text="Cars in database"/>
                 </TextBlock>
                 <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="20" Padding="20">
-                    <Run Text="Time elapsed: "/>
-                    <Run Text="{Binding TimeElapsed}"/>
-                </TextBlock>                    
+                    <Run Text="Read Time elapsed: "/>
+                    <Run Text="{Binding ReadTimeElapsed}"/>
+                </TextBlock>
+                <Border BorderThickness="5" BorderBrush="Bisque" Padding="0">
+                <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="20" Padding="20">
+                    <Run Text="Save Time elapsed: "/>
+                    <Run Text="{Binding SaveTimeElapsed}"/>
+                        <TextBlock.Style>
+                            <Style>
+                                <Setter Property="TextBlock.Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush>
+                                            <GradientStop Offset="0" Color="White"/>
+                                            <GradientStop Offset="1" Color="Bisque"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </TextBlock.Style>
+                </TextBlock>
+                </Border>
+                <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="20" Padding="20">
+                    <Run Text="Copy Time elapsed: "/>
+                    <Run Text="{Binding CopyTimeElapsed}"/>
+                </TextBlock>
             </StackPanel>
         </DockPanel>
     </Grid>

@@ -5,6 +5,7 @@ using NHibernate;
 using System.Collections.Generic;
 using SpeedUP.DAL.Domain;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace SpeedUP.DAL
 {
@@ -48,22 +49,33 @@ namespace SpeedUP.DAL
             return result;
         }
 
-        public static async Task SaveCarsAsync(int carCount)
+        public static async Task<string> SaveCarsAsync(int carCount)
         {
+            session.FlushMode = FlushMode.Commit;
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
             await Task.Run(() =>
             {
-                for (int i = 0; i < carCount; i++)
+                using (var transaction = session.BeginTransaction())
                 {
-                    var carEntity = new Car()
+                    for (int i = 0; i < carCount; i++)
                     {
-                        Make = "StillVolkswagen",
-                        Model = "AlwaysBora",
-                        Year = i / 1000
-                    };
-                    session.Save(carEntity);
+                        var carEntity = new Car()
+                        {
+                            Make = "StillVolkswagen",
+                            Model = "AlwaysBora",
+                            Year = i / 1000
+                        };
+                        session.Save(carEntity);
+                    }
+                    transaction.Commit();
                 }
-                session.Flush();
             });
+            watch.Stop();
+
+            session.FlushMode = FlushMode.Auto;
+
+            return watch.ElapsedMilliseconds.ToString();
         }
 
         public static void SaveCars(int carCount)
