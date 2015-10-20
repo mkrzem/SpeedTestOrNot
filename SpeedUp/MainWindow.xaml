@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpeedUp"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
         Title="SpeedUp!" Height="350" Width="525"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
@@ -26,12 +27,24 @@
     </Window.Resources>
     <Grid>
         <DockPanel>
-            <StackPanel DockPanel.Dock="Top" Background="{StaticResource backgroundBrush}" Orientation="Horizontal">
-                <TextBox Text="{Binding CarCount, Mode=TwoWay}" Width="50" Margin="0,0,5,0"/>
-                <Button Style="{StaticResource buttons}" Command="{Binding Save}">Save</Button>
-                <Button Style="{StaticResource buttons}" Command="{Binding Read}">Read</Button>
-                <Button Style="{StaticResource buttons}" Command="{Binding ClearDatabase}">Clear Database</Button>
-            </StackPanel>
+            <DockPanel DockPanel.Dock="Top" Background="{StaticResource backgroundBrush}">
+                <TextBox Text="{Binding CarCount, Mode=TwoWay}" Width="50" Margin="0,0,5,0" DockPanel.Dock="Left"/>
+                <Button Style="{StaticResource buttons}" Command="{Binding Save}" DockPanel.Dock="Left">Save</Button>
+                <Button Style="{StaticResource buttons}" Command="{Binding Read}" DockPanel.Dock="Left">Read</Button>
+                <Button Style="{StaticResource buttons}" Command="{Binding ClearDatabase}" 
+                        DockPanel.Dock="Right" HorizontalAlignment="Right">Clear Database</Button>
+                <ComboBox DockPanel.Dock="Left" FontWeight="Bold" SelectedIndex="0"
+                          VerticalContentAlignment="Center" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding DatabaseChanged}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ComboBoxItem Content="NHibernate"/>
+                    <ComboBoxItem Content="MongoDB"/>
+                </ComboBox>
+            </DockPanel>
+            <TextBox DockPanel.Dock="Bottom" Text="{Binding Query}" FontWeight="Bold"/>
             <StackPanel>
                 <TextBlock>
                     <Run Text="{Binding Cars.Count, Mode=OneWay}"/>
@@ -64,6 +77,7 @@
                     <Run Text="{Binding CopyTimeElapsed}"/>
                 </TextBlock>
             </StackPanel>
+            
         </DockPanel>
     </Grid>
 </Window>

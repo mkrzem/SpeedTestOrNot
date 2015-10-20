@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Timers;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace SpeedUp.ViewModel
@@ -30,6 +31,7 @@ namespace SpeedUp.ViewModel
         private string readtimeElapsed;
         private string saveTimeElapsed;
         private string copyTimeElapsed;
+        private string query;
         public int CarCount { get; set; }        
 
         public ObservableCollection<Car> Cars
@@ -74,6 +76,19 @@ namespace SpeedUp.ViewModel
                 RaisePropertyChanged(nameof(CopyTimeElapsed));
             }
         }
+
+        public string Query
+        {
+            get
+            {
+                return query;
+            }
+            set
+            {
+                query = value;
+                RaisePropertyChanged(nameof(Query));
+            }
+        }
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -95,12 +110,24 @@ namespace SpeedUp.ViewModel
             {
                 return new RelayCommand(async () => 
                 {
-                    Cars.Clear();
+
+                    IList<Car> readCars = new List<Car>();
                     Timer timer = new Timer();
                     Stopwatch watch = new Stopwatch();
+
+                    Cars.Clear();
                     watch.Reset();
                     watch.Start();
-                    IList<Car> readCars = await DataAccessManager.ReadCarsAsync();
+
+                    try
+                    {
+                        readCars = await DataAccessManager.ReadCarsAsync(Query);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show( e.Message, "Error");
+                    }
+
                     watch.Stop();
                     ReadTimeElapsed = watch.ElapsedMilliseconds.ToString();
 
@@ -108,10 +135,6 @@ namespace SpeedUp.ViewModel
                     Cars = new ObservableCollection<Car>(readCars);
                     watch.Stop();
                     CopyTimeElapsed = watch.ElapsedMilliseconds.ToString();
-                    //foreach (Car car in readCars)
-                    //{
-                    //    Cars.Add(car);
-                    //}
                 });
             }
         } 
@@ -137,6 +160,21 @@ namespace SpeedUp.ViewModel
                         MessageBoxImage.Exclamation, MessageBoxResult.No) == MessageBoxResult.Yes)
                     {
                         DataAccessManager.ClearCars();
+                    }
+                });
+            }
+        }
+
+        public ICommand DatabaseChanged
+        {
+            get
+            {
+                return new RelayCommand<object>((param) => 
+                {
+                    var args = param as SelectionChangedEventArgs;
+                    if (args?.AddedItems.Count > 0)
+                    {
+                        DataAccessManager.ChangeDatabase(args?.AddedItems?[0].ToString());
                     }
                 });
             }
