@@ -7,6 +7,8 @@ using System.Linq;
 using SpeedUP.DAL.Domain;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System;
+using NHibernate.Tool.hbm2ddl;
 
 namespace SpeedUP.DAL
 {
@@ -23,7 +25,7 @@ namespace SpeedUP.DAL
             configuration.Configure();
             configuration.AddAssembly(typeof(Car).Assembly);
 
-            //new SchemaExport(configuration).Execute(false, true, false);
+            new SchemaExport(configuration).Execute(false, true, false);
 
             ISessionFactory sessionFactory = configuration.BuildSessionFactory();
             session = sessionFactory.OpenSession();
@@ -91,14 +93,28 @@ namespace SpeedUP.DAL
                 using (var transaction = session.BeginTransaction())
                 {
                     watch.Start();
+                    var random = new Random();
+                    List<Manufacturer> manus = GetManufacturers();
                     for (int i = 0; i < carCount; i++)
                     {
+                        int manufacturerNumber = random.Next(10);
+                        int PartsCount = random.Next(50);
+                        List<Part> parts = new List<Part>();
+                        
+
                         var carEntity = new Car()
                         {
                             Make = "StillVolkswagen",
                             Model = "AlwaysBora",
-                            Year = i / 1000
+                            Year = i / 1000,
+
                         };
+                        
+                        for (int j = 0; j < PartsCount; j++)
+                        {
+                            parts.Add(new Part { Car = carEntity, Manufacturer = manus[manufacturerNumber], PartName = string.Format("PartType{0}", j)});
+                        }
+
                         session.Save(carEntity);
                     }
                     watch.Stop();
@@ -110,6 +126,21 @@ namespace SpeedUP.DAL
             session.FlushMode = FlushMode.Auto;
 
             return watch.ElapsedMilliseconds.ToString();
+        }
+
+        private static List<Manufacturer> GetManufacturers()
+        {
+            List<Manufacturer> manu = new List<Manufacturer>();
+            manu.AddRange(new Manufacturer[]
+            {
+                            new Manufacturer { Name = "ManA" }, new Manufacturer { Name = "ManB" },
+                            new Manufacturer { Name = "ManC" }, new Manufacturer { Name = "ManD" },
+                            new Manufacturer { Name = "ManE" }, new Manufacturer { Name = "ManF" },
+                            new Manufacturer { Name = "ManG" }, new Manufacturer { Name = "ManH" },
+                            new Manufacturer { Name = "ManI" }, new Manufacturer { Name = "ManJ" },
+            });
+
+            return manu;
         }
 
         public static void SaveCars(int carCount)

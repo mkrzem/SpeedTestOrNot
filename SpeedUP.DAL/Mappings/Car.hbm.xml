@@ -10,7 +10,7 @@
     <property name="Make"/>
     <property name="Model"/>
     <property name="Year"/>
-    <bag name="CarToParts" inverse="true" cascade="all-delete-orphan">
+    <bag name="Parts" inverse="true" cascade="all-delete-orphan">
       <key column="CarId"/>
       <one-to-many class="Part"/>
     </bag>

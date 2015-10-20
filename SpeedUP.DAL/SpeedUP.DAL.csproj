@@ -101,6 +101,8 @@
     <Compile Include="DataAccessManager.cs" />
     <Compile Include="Abstract\IDataService.cs" />
     <Compile Include="Domain\Car.cs" />
+    <Compile Include="Domain\Manufacturer.cs" />
+    <Compile Include="Domain\Part.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -115,7 +117,11 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Mappings\Car.hbm.xml" />
+    <Content Include="Mappings\Manufacturer.hbm.xml" />
+    <Content Include="Mappings\Part.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Car.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
