@@ -28,13 +28,14 @@
     <Grid>
         <DockPanel>
             <DockPanel DockPanel.Dock="Top" Background="{StaticResource backgroundBrush}">
-                <TextBox Text="{Binding CarCount, Mode=TwoWay}" Width="50" Margin="0,0,5,0" DockPanel.Dock="Left"/>
+                <TextBox Text="{Binding CarCount, Mode=TwoWay}" Width="50" Margin="0,0,5,0"
+                         DockPanel.Dock="Left" IsEnabled="{Binding IsBusy}"/>
                 <Button Style="{StaticResource buttons}" Command="{Binding Save}" DockPanel.Dock="Left">Save</Button>
                 <Button Style="{StaticResource buttons}" Command="{Binding Read}" DockPanel.Dock="Left">Read</Button>
                 <Button Style="{StaticResource buttons}" Command="{Binding ClearDatabase}" 
                         DockPanel.Dock="Right" HorizontalAlignment="Right">Clear Database</Button>
                 <ComboBox DockPanel.Dock="Left" FontWeight="Bold" SelectedIndex="0"
-                          VerticalContentAlignment="Center" >
+                          VerticalContentAlignment="Center" IsEnabled="{Binding IsBusy}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding DatabaseChanged}"/>
@@ -79,5 +80,21 @@
             </StackPanel>
             
         </DockPanel>
+
+        <Border BorderBrush="Black" BorderThickness="1" Background="#7f000000" Visibility="Visible">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <Trigger Property="Visibility" Value="Visible">
+                            <Setter Property="Background" Value="#ff000000"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            
+            <Grid>
+                <TextBlock Margin="0" TextWrapping="Wrap" Text="Busy...Please Wait" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667" FontWeight="Bold" Foreground="#7EFFFFFF"/>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

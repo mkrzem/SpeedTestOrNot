@@ -32,6 +32,8 @@ namespace SpeedUp.ViewModel
         private string saveTimeElapsed;
         private string copyTimeElapsed;
         private string query;
+        private bool isBusy;
+        
         public int CarCount { get; set; }        
 
         public ObservableCollection<Car> Cars
@@ -89,6 +91,19 @@ namespace SpeedUp.ViewModel
                 RaisePropertyChanged(nameof(Query));
             }
         }
+
+        public bool IsBusy
+        {
+            get
+            {
+                return isBusy;
+            }
+            set
+            {
+                isBusy = value;
+                RaisePropertyChanged(nameof(IsBusy));
+            }
+        }
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -135,7 +150,7 @@ namespace SpeedUp.ViewModel
                     Cars = new ObservableCollection<Car>(readCars);
                     watch.Stop();
                     CopyTimeElapsed = watch.ElapsedMilliseconds.ToString();
-                });
+                }, () => IsBusy);
             }
         } 
 
@@ -147,7 +162,7 @@ namespace SpeedUp.ViewModel
                 {
                     SaveTimeElapsed = await DataAccessManager.SaveCarsAsync(CarCount);
                     MessageBox.Show(string.Format("Saved in: {0}!", SaveTimeElapsed), "Information");
-                });
+                }, () => IsBusy);
             }
         }
 
@@ -162,7 +177,7 @@ namespace SpeedUp.ViewModel
                     {
                         DataAccessManager.ClearCars();
                     }
-                });
+                }, () => IsBusy);
             }
         }
 
