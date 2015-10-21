@@ -17,6 +17,7 @@ namespace SpeedUP.DAL
         private static ISession session;
         private static IMongoClient client;
         private static IMongoDatabase database;
+        private static ISessionFactory sessionFactory;
 
         public static void InitDataService(string serviceType)
         {
@@ -25,10 +26,11 @@ namespace SpeedUP.DAL
             configuration.Configure();
             configuration.AddAssembly(typeof(Car).Assembly);
 
-            new SchemaExport(configuration).Execute(false, true, false);
+            //new SchemaExport(configuration).Execute(false, true, false);
 
-            ISessionFactory sessionFactory = configuration.BuildSessionFactory();
+            sessionFactory = configuration.BuildSessionFactory();            
             session = sessionFactory.OpenSession();
+            //CreateManufacturers();
             #endregion
 
             #region MongoDB
@@ -37,6 +39,25 @@ namespace SpeedUP.DAL
             //cars.InsertOneAsync(newCar);
 
             #endregion
+        }
+
+        private static void CreateManufacturers()
+        {
+            using (var transaction = session.BeginTransaction())
+            {
+                session.Save(new Manufacturer { Name = "ManA" });
+                session.Save(new Manufacturer { Name = "ManB" });
+                session.Save(new Manufacturer { Name = "ManC" });
+                session.Save(new Manufacturer { Name = "ManD" });
+                session.Save(new Manufacturer { Name = "ManE" });
+                session.Save(new Manufacturer { Name = "ManF" });
+                session.Save(new Manufacturer { Name = "ManG" });
+                session.Save(new Manufacturer { Name = "ManH" });
+                session.Save(new Manufacturer { Name = "ManI" });
+                session.Save(new Manufacturer { Name = "ManJ" });
+
+                transaction.Commit();
+            }
         }
 
         private static void InitMongoAsync()
@@ -85,62 +106,53 @@ namespace SpeedUP.DAL
 
         public static async Task<string> SaveCarsAsync(int carCount)
         {
-            session.FlushMode = FlushMode.Commit;
+            
             Stopwatch watch = new Stopwatch();
             //watch.Start();
             await Task.Run(() =>
             {
-                using (var transaction = session.BeginTransaction())
+                using(var saveSession = sessionFactory.OpenStatelessSession())
+                using (var transaction = saveSession.BeginTransaction())
                 {
                     watch.Start();
                     var random = new Random();
-                    List<Manufacturer> manus = GetManufacturers();
+                    IList<Manufacturer> manus = GetManufacturers();
                     for (int i = 0; i < carCount; i++)
                     {
                         int manufacturerNumber = random.Next(10);
                         int PartsCount = random.Next(50);
-                        List<Part> parts = new List<Part>();
                         
-
                         var carEntity = new Car()
                         {
                             Make = "StillVolkswagen",
                             Model = "AlwaysBora",
                             Year = i / 1000,
-
+                            Parts = new List<Part>()
                         };
                         
                         for (int j = 0; j < PartsCount; j++)
                         {
-                            parts.Add(new Part { Car = carEntity, Manufacturer = manus[manufacturerNumber], PartName = string.Format("PartType{0}", j)});
+                            carEntity.Parts.Add(new Part { Car = carEntity, Manufacturer = manus[manufacturerNumber], PartName = string.Format("PartType{0}", j)});
                         }
 
-                        session.Save(carEntity);
+                        saveSession.Insert(carEntity);
                     }
+                    
+                    //watch.Start();
+                    transaction.Commit();
                     watch.Stop();
-                    transaction.Commit();                    
                 }
             });
             //watch.Stop();
 
-            session.FlushMode = FlushMode.Auto;
+            //session.FlushMode = FlushMode.Auto;
 
             return watch.ElapsedMilliseconds.ToString();
         }
 
-        private static List<Manufacturer> GetManufacturers()
+        private static IList<Manufacturer> GetManufacturers()
         {
-            List<Manufacturer> manu = new List<Manufacturer>();
-            manu.AddRange(new Manufacturer[]
-            {
-                            new Manufacturer { Name = "ManA" }, new Manufacturer { Name = "ManB" },
-                            new Manufacturer { Name = "ManC" }, new Manufacturer { Name = "ManD" },
-                            new Manufacturer { Name = "ManE" }, new Manufacturer { Name = "ManF" },
-                            new Manufacturer { Name = "ManG" }, new Manufacturer { Name = "ManH" },
-                            new Manufacturer { Name = "ManI" }, new Manufacturer { Name = "ManJ" },
-            });
-
-            return manu;
+            return session.QueryOver<Manufacturer>().List();
         }
 
         public static void SaveCars(int carCount)

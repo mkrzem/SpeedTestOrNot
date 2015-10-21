@@ -8,6 +8,6 @@ namespace SpeedUP.DAL.Domain
         public string Make { get; set; }
         public string Model { get; set; }
         public int Year { get; set; }
-        public virtual List<Part> Parts { get; set; }
+        public virtual IList<Part> Parts { get; set; }
     }
 }

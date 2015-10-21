@@ -117,8 +117,8 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Mappings\Manufacturer.hbm.xml" />
-    <Content Include="Mappings\Part.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Manufacturer.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Part.hbm.xml" />
     <EmbeddedResource Include="Mappings\Car.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>

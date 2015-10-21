@@ -146,6 +146,7 @@ namespace SpeedUp.ViewModel
                 return new RelayCommand(async () => 
                 {
                     SaveTimeElapsed = await DataAccessManager.SaveCarsAsync(CarCount);
+                    MessageBox.Show(string.Format("Saved in: {0}!", SaveTimeElapsed), "Information");
                 });
             }
         }
