@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpeedUp"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:custom="clr-namespace:SpeedUp.CustomUI"
         mc:Ignorable="d"
         Title="SpeedUp!" Height="350" Width="525"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
@@ -93,7 +94,40 @@
             </Border.Style>
             
             <Grid>
-                <TextBlock Margin="0" TextWrapping="Wrap" Text="Busy...Please Wait" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667" FontWeight="Bold" Foreground="#7EFFFFFF"/>
+                <StackPanel VerticalAlignment="Center">
+                    <custom:RadialPanel Width="15" Height="15" x:Name="BusyMarker">
+                        <Ellipse />
+                        <Ellipse />
+                        <Ellipse />
+                        <Ellipse />
+                        <Ellipse Width="5" Height="5" Fill="#4Effffff" />
+                        <Ellipse Width="5" Height="5" Fill="#6Fffffff" />                        
+                        <Ellipse Width="5" Height="5" Fill="#AFffffff" />
+                        <Ellipse Width="5" Height="5" Fill="#DFffffff" />
+                        <Ellipse Width="5" Height="5" Fill="#ffffff"  />
+                        
+                        <custom:RadialPanel.RenderTransform>
+                            <RotateTransform CenterX="7.5" CenterY="7.5"/>
+                        </custom:RadialPanel.RenderTransform>
+                        <custom:RadialPanel.Style>
+                            <Style TargetType="custom:RadialPanel">                                
+                                <Style.Triggers>
+                                    <Trigger Property="Visibility" Value="Visible">
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(Canvas.RenderTransform).(RotateTransform.Angle)"
+                                                                     To="360" Duration="0:0:2" RepeatBehavior="Forever"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </custom:RadialPanel.Style>
+                    </custom:RadialPanel>
+                            <TextBlock Margin="0" TextWrapping="Wrap" Text="Busy...Please Wait" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667" FontWeight="Bold" Foreground="#7EFFFFFF"/>
+                </StackPanel>               
             </Grid>
         </Border>
     </Grid>
