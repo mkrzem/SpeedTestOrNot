@@ -33,6 +33,7 @@ namespace SpeedUp.ViewModel
         private string copyTimeElapsed;
         private string query;
         private bool isBusy;
+        private string busyInfo;
         
         public int CarCount { get; set; }        
 
@@ -104,6 +105,16 @@ namespace SpeedUp.ViewModel
                 RaisePropertyChanged(nameof(IsBusy));
             }
         }
+
+        public string BusyInfo
+        {
+            get { return busyInfo; }
+            set
+            {
+                busyInfo = value;
+                RaisePropertyChanged(nameof(BusyInfo));
+            }
+        }
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -136,11 +147,17 @@ namespace SpeedUp.ViewModel
 
                     try
                     {
+                        BusyInfo = "Reading";
+                        IsBusy = true;
                         readCars = await DataAccessManager.ReadCarsAsync(Query);
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show( e.Message, "Error");
+                        MessageBox.Show(e.Message, "Error");
+                    }
+                    finally
+                    {
+                        IsBusy = false;
                     }
 
                     watch.Stop();
@@ -150,7 +167,7 @@ namespace SpeedUp.ViewModel
                     Cars = new ObservableCollection<Car>(readCars);
                     watch.Stop();
                     CopyTimeElapsed = watch.ElapsedMilliseconds.ToString();
-                }, () => IsBusy);
+                }, () => !IsBusy);
             }
         } 
 
@@ -160,9 +177,22 @@ namespace SpeedUp.ViewModel
             {
                 return new RelayCommand(async () => 
                 {
-                    SaveTimeElapsed = await DataAccessManager.SaveCarsAsync(CarCount);
-                    MessageBox.Show(string.Format("Saved in: {0}!", SaveTimeElapsed), "Information");
-                }, () => IsBusy);
+                    try
+                    {
+                        BusyInfo = "Saving";
+                        IsBusy = true;
+                        SaveTimeElapsed = await DataAccessManager.SaveCarsAsync(CarCount);
+                        MessageBox.Show(string.Format("Saved in: {0}!", SaveTimeElapsed), "Information");
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message, "Error");
+                    }
+                    finally
+                    {
+                        IsBusy = false;
+                    }
+                }, () => !IsBusy);
             }
         }
 
@@ -177,7 +207,7 @@ namespace SpeedUp.ViewModel
                     {
                         DataAccessManager.ClearCars();
                     }
-                }, () => IsBusy);
+                }, () => !IsBusy);
             }
         }
 

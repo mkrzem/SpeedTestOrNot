@@ -25,18 +25,19 @@
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="BorderBrush" Value="Black"/>            
         </Style>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilty"/>
     </Window.Resources>
     <Grid>
         <DockPanel>
             <DockPanel DockPanel.Dock="Top" Background="{StaticResource backgroundBrush}">
                 <TextBox Text="{Binding CarCount, Mode=TwoWay}" Width="50" Margin="0,0,5,0"
-                         DockPanel.Dock="Left" IsEnabled="{Binding IsBusy}"/>
+                         DockPanel.Dock="Left" IsEnabled="{Binding !IsBusy}"/>
                 <Button Style="{StaticResource buttons}" Command="{Binding Save}" DockPanel.Dock="Left">Save</Button>
                 <Button Style="{StaticResource buttons}" Command="{Binding Read}" DockPanel.Dock="Left">Read</Button>
                 <Button Style="{StaticResource buttons}" Command="{Binding ClearDatabase}" 
                         DockPanel.Dock="Right" HorizontalAlignment="Right">Clear Database</Button>
                 <ComboBox DockPanel.Dock="Left" FontWeight="Bold" SelectedIndex="0"
-                          VerticalContentAlignment="Center" IsEnabled="{Binding IsBusy}">
+                          VerticalContentAlignment="Center" IsEnabled="{Binding !IsBusy}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding DatabaseChanged}"/>
@@ -82,7 +83,8 @@
             
         </DockPanel>
 
-        <Border BorderBrush="Black" BorderThickness="1" Background="#7f000000" Visibility="Visible">
+        <Border BorderBrush="Black" BorderThickness="1" Background="#7f000000" 
+                Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilty}}">
             <Border.Style>
                 <Style TargetType="Border">
                     <Style.Triggers>
@@ -126,7 +128,8 @@
                             </Style>
                         </custom:RadialPanel.Style>
                     </custom:RadialPanel>
-                            <TextBlock Margin="0" TextWrapping="Wrap" Text="Busy...Please Wait" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667" FontWeight="Bold" Foreground="#7EFFFFFF"/>
+                            <TextBlock Margin="0, 30, 0, 0" TextWrapping="Wrap" 
+                                       Text="{Binding BusyInfo, StringFormat={} {0}... Please Wait}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667" FontWeight="Bold" Foreground="#7EFFFFFF"/>
                 </StackPanel>               
             </Grid>
         </Border>
