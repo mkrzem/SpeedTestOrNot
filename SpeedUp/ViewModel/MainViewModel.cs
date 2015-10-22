@@ -34,6 +34,7 @@ namespace SpeedUp.ViewModel
         private string query;
         private bool isBusy;
         private string busyInfo;
+        private int progressValue;
         
         public int CarCount { get; set; }        
 
@@ -115,6 +116,17 @@ namespace SpeedUp.ViewModel
                 RaisePropertyChanged(nameof(BusyInfo));
             }
         }
+
+        public int ProgressValue
+        {
+            get { return progressValue; }
+            set
+            {
+                progressValue = value;
+                RaisePropertyChanged(nameof(ProgressValue));
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -181,7 +193,11 @@ namespace SpeedUp.ViewModel
                     {
                         BusyInfo = "Saving";
                         IsBusy = true;
-                        SaveTimeElapsed = await DataAccessManager.SaveCarsAsync(CarCount);
+                        var progress = new Progress<int>(value => 
+                        {
+                            ProgressValue = value;
+                        });
+                        SaveTimeElapsed = await DataAccessManager.CreateAndSaveCarsAsync(CarCount, progress);
                         MessageBox.Show(string.Format("Saved in: {0}!", SaveTimeElapsed), "Information");
                     }
                     catch (Exception e)
@@ -215,7 +231,7 @@ namespace SpeedUp.ViewModel
         {
             get
             {
-                return new RelayCommand<object>((param) => 
+                return new RelayCommand<object>(param => 
                 {
                     var args = param as SelectionChangedEventArgs;
                     if (args?.AddedItems.Count > 0)

@@ -97,7 +97,7 @@
             
             <Grid>
                 <StackPanel VerticalAlignment="Center">
-                    <custom:RadialPanel Width="15" Height="15" x:Name="BusyMarker">
+                    <!--<custom:RadialPanel Width="15" Height="15" x:Name="BusyMarker">
                         <Ellipse />
                         <Ellipse />
                         <Ellipse />
@@ -127,9 +127,12 @@
                                 </Style.Triggers>
                             </Style>
                         </custom:RadialPanel.Style>
-                    </custom:RadialPanel>
-                            <TextBlock Margin="0, 30, 0, 0" TextWrapping="Wrap" 
-                                       Text="{Binding BusyInfo, StringFormat={} {0}... Please Wait}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667" FontWeight="Bold" Foreground="#7EFFFFFF"/>
+                    </custom:RadialPanel>-->
+                    <ProgressBar Value="{Binding ProgressValue}"/>
+                    <TextBlock Margin="0, 30, 0, 0" TextWrapping="Wrap" 
+                               Text="{Binding BusyInfo, StringFormat={} {0}... Please Wait}" 
+                               HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667" 
+                               FontWeight="Bold" Foreground="#7EFFFFFF"/>
                 </StackPanel>               
             </Grid>
         </Border>

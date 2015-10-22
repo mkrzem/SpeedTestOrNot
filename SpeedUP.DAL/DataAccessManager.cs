@@ -104,7 +104,7 @@ namespace SpeedUP.DAL
             return result;
         }
 
-        public static async Task<string> SaveCarsAsync(int carCount)
+        public static async Task<string> CreateAndSaveCarsAsync(int carsCount, IProgress<int> progress = null)
         {
             
             Stopwatch watch = new Stopwatch();
@@ -116,28 +116,16 @@ namespace SpeedUP.DAL
                 {
                     watch.Start();
                     var random = new Random();
-                    IList<Manufacturer> manus = GetManufacturers();
-                    for (int i = 0; i < carCount; i++)
+                    IList<Manufacturer> manufacturers = GetManufacturers();
+                    for (int current = 0; current < carsCount; current++)
                     {
-                        int manufacturerNumber = random.Next(10);
-                        int PartsCount = random.Next(50);
-                        
-                        var carEntity = new Car()
-                        {
-                            Make = "StillVolkswagen",
-                            Model = "AlwaysBora",
-                            Year = i / 1000,
-                            Parts = new List<Part>()
-                        };
-                        
-                        for (int j = 0; j < PartsCount; j++)
-                        {
-                            carEntity.Parts.Add(new Part { Car = carEntity, Manufacturer = manus[manufacturerNumber], PartName = string.Format("PartType{0}", j)});
-                        }
+                        Car carEntity = CreateNewCar(random, manufacturers, current);
 
                         saveSession.Insert(carEntity);
+
+                        progress?.Report((int)(((float)current / (float)carsCount) * 100));
                     }
-                    
+
                     //watch.Start();
                     transaction.Commit();
                     watch.Stop();
@@ -148,6 +136,27 @@ namespace SpeedUP.DAL
             //session.FlushMode = FlushMode.Auto;
 
             return watch.ElapsedMilliseconds.ToString();
+        }
+
+        private static Car CreateNewCar(Random random, IList<Manufacturer> manus, int current)
+        {
+            int manufacturerNumber = random.Next(10);
+            int PartsCount = random.Next(50);
+
+            var carEntity = new Car()
+            {
+                Make = "StillVolkswagen",
+                Model = "AlwaysBora",
+                Year = current / 1000,
+                Parts = new List<Part>()
+            };
+
+            for (int j = 0; j < PartsCount; j++)
+            {
+                carEntity.Parts.Add(new Part { Car = carEntity, Manufacturer = manus[manufacturerNumber], PartName = string.Format("PartType{0}", j) });
+            }
+
+            return carEntity;
         }
 
         private static IList<Manufacturer> GetManufacturers()
