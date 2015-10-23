@@ -123,7 +123,7 @@ namespace SpeedUP.DAL
 
                         saveSession.Insert(carEntity);
 
-                        progress?.Report((int)(((float)current / (float)carsCount) * 100));
+                        progress?.Report((int)(((float)current / carsCount) * 100));
                     }
 
                     //watch.Start();

@@ -89,6 +89,14 @@
                 <Style TargetType="Border">
                     <Style.Triggers>
                         <Trigger Property="Visibility" Value="Visible">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" From="#7f000000" To="#ff000000" AutoReverse="True"
+                                                        Duration="0:0:2" RepeatBehavior="Forever"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
                             <Setter Property="Background" Value="#ff000000"/>
                         </Trigger>
                     </Style.Triggers>
@@ -142,5 +150,36 @@
                 </StackPanel>               
             </Grid>
         </Border>
+            <Grid Background="Black" TextBlock.Foreground="White" TextBlock.FontSize="30">
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="Grid.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard TargetProperty="Opacity" RepeatBehavior="Forever">
+                                <DoubleAnimation Storyboard.TargetName="title1" BeginTime="0:0:2"
+                                                 From="0" To="1" Duration="0:0:2" AutoReverse="True"/>
+                                    <DoubleAnimation Storyboard.TargetName="title2" BeginTime="0:0:6"
+                                                     From="0" To="1" Duration="0:0:2" AutoReverse="True"/>
+                                <DoubleAnimation Storyboard.TargetName="title3" BeginTime="0:0:10"
+                                                 From="0" To="1" Duration="0:0:2" AutoReverse="True"/>
+                                <DoubleAnimation Storyboard.TargetName="title4" BeginTime="0:0:14"
+                                                 From="0" To="1" Duration="0:0:2" AutoReverse="True"/>
+                                <DoubleAnimation Storyboard.TargetName="title5" BeginTime="0:0:18"
+                                                 From="0" To="1" Duration="0:0:2" AutoReverse="True"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Grid.Triggers>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0"
+                           Name="title1">In a world</TextBlock>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0"
+                           Name="title2">where user interfaces need to be created</TextBlock>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0"
+                           Name="title3">one book</TextBlock>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0"
+                           Name="title4">will explain it all...</TextBlock>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0"
+                           Name="title5">WPF 4.5 Unleashed</TextBlock>
+            </Grid>
+               
     </Grid>
 </Window>
