@@ -128,11 +128,17 @@
                             </Style>
                         </custom:RadialPanel.Style>
                     </custom:RadialPanel>-->
-                    <ProgressBar Value="{Binding ProgressValue}"/>
-                    <TextBlock Margin="0, 30, 0, 0" TextWrapping="Wrap" 
-                               Text="{Binding BusyInfo, StringFormat={} {0}... Please Wait}" 
+                    <ProgressBar Width="200" Height="10" Background="#1F000000" Foreground="{StaticResource backgroundBrush}" Value="{Binding ProgressValue}"/>
+                    <TextBlock Margin="0, 30, 0, 0" TextWrapping="Wrap"                                
                                HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26.667" 
-                               FontWeight="Bold" Foreground="#7EFFFFFF"/>
+                               FontWeight="Bold" Foreground="#7EFFFFFF">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0}... ({1}%)">
+                                <Binding Path="BusyInfo"/>
+                                <Binding Path="ProgressValue"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
                 </StackPanel>               
             </Grid>
         </Border>

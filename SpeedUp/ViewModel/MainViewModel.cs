@@ -122,7 +122,7 @@ namespace SpeedUp.ViewModel
             get { return progressValue; }
             set
             {
-                progressValue = value;
+                progressValue = value + 1;
                 RaisePropertyChanged(nameof(ProgressValue));
             }
         }
